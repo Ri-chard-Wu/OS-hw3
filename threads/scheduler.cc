@@ -86,6 +86,15 @@ Scheduler::FindNextToRun()
 
         Thread *curThread = kernel->currentThread;
         Thread *nextThread =  readyList->RemoveFront()->thread;
+        cout << "\n##########################\n";
+        cout << "\n\ncurThread name: " << curThread->getName() 
+             << "\n";
+        curThread->tsb->print();
+
+        cout << "\n--------------------------\n";
+        cout << "\n\nnextThread name: " << nextThread->getName() 
+             << "\n";        
+        nextThread->tsb->print();
 
 
         //  cout << "totalTicks: " 
@@ -93,6 +102,9 @@ Scheduler::FindNextToRun()
         //       << "\n";
 
         // cout << "nextThread name: " << nextThread->getName() 
+        //      << "\n";
+
+        // cout << "curThread name: " << curThread->getName() 
         //      << "\n";
 
         // cout << "getPrevStatus(): " 
@@ -108,7 +120,6 @@ Scheduler::FindNextToRun()
 
         tsb = curThread->tsb;
         tsb->T += t_cur - tsb->t_start;
-        // tsb->t_start = t_cur;
 
         if(curThread->getStatus() == RUNNING){ // running -> ready.
             
@@ -124,57 +135,10 @@ Scheduler::FindNextToRun()
         }
 
 
-        /* for current thread */
+        /* for next thread */
 
         tsb = nextThread->tsb;
         tsb->t_start = t_cur;
-
-
-
-
-         /* test */
-
-
-        ThreadSchedulingBlock * tsb_test;
-        SortedList<ThreadSchedulingBlock *>\
-             srtdList(ThreadSchedulingBlock::Compare);
-        
-        tsb_test = new ThreadSchedulingBlock;
-        tsb_test->t_key = 2.50;
-        srtdList.Insert(tsb_test);
-
-        tsb_test = new ThreadSchedulingBlock;
-        tsb_test->t_key = 2425255.5;
-        srtdList.Insert(tsb_test);  
-
-        tsb_test = new ThreadSchedulingBlock;
-        tsb_test->t_key = 22232.5;
-        srtdList.Insert(tsb_test);
-
-        tsb_test = new ThreadSchedulingBlock;
-        tsb_test->t_key = 2.2;
-        srtdList.Insert(tsb_test);
-
-
-        tsb_test = new ThreadSchedulingBlock;
-        tsb_test->t_key = 10000.8;
-        srtdList.Insert(tsb_test);
-
-
-        while(!srtdList.IsEmpty()){ 
-            tsb_test = srtdList.RemoveFront();
-            cout << "t_key: " 
-                 << tsb_test->t_key
-                 << "\n";
-
-        }
-        cout << "\n\n";
-
-
-
-
-
-
 
 
     	return nextThread;

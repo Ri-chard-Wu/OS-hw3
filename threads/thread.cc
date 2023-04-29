@@ -51,6 +51,9 @@ Thread::Thread(char* threadName, int threadID)
 
     tsb = new ThreadSchedulingBlock;
     tsb->thread = this;
+    tsb->t_pred = 0;
+    tsb->t_key = 0;
+    tsb->T = 0;
 }
 
 //----------------------------------------------------------------------
