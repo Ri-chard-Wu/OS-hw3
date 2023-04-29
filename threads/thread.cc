@@ -161,21 +161,8 @@ Thread::Begin ()
     kernel->interrupt->Enable();
 }
 
-//----------------------------------------------------------------------
-// Thread::Finish
-// 	Called by ThreadRoot when a thread is done executing the 
-//	forked procedure.
-//
-// 	NOTE: we can't immediately de-allocate the thread data structure 
-//	or the execution stack, because we're still running in the thread 
-//	and we're still on the stack!  Instead, we tell the scheduler
-//	to call the destructor, once it is running in the context of a different thread.
-//
-// 	NOTE: we disable interrupts, because Sleep() assumes interrupts
-//	are disabled.
-//----------------------------------------------------------------------
 
-//
+
 void
 Thread::Finish ()
 {
@@ -185,23 +172,23 @@ Thread::Finish ()
 }
 
 
-//----------------------------------------------------------------------
-// Thread::Yield
-// 	Relinquish the CPU if any other thread is ready to run.
-//	If so, put the thread on the end of the ready list, so that
-//	it will eventually be re-scheduled.
-//
-//	NOTE: returns immediately if no other thread on the ready queue.
-//	Otherwise returns when the thread eventually works its way
-//	to the front of the ready list and gets re-scheduled.
-//
-//	NOTE: we disable interrupts, so that looking at the thread
-//	on the front of the ready list, and switching to it, can be done
-//	atomically.  On return, we re-set the interrupt level to its
-//	original state, in case we are called with interrupts disabled. 
-//
-// 	Similar to Thread::Sleep(), but a little different.
-//----------------------------------------------------------------------
+
+// void
+// Thread::Yield()
+// {
+//     Thread *nextThread;
+//     IntStatus oldLevel = \
+//             kernel->interrupt->SetLevel(IntOff);
+//     ASSERT(this == kernel->currentThread);
+//     nextThread = \
+//             kernel->scheduler->FindNextToRun();
+//     if (nextThread != NULL) {
+//         kernel->scheduler->ReadyToRun(this);
+//         kernel->scheduler->Run(nextThread, FALSE);
+//     }
+//     (void) kernel->interrupt->SetLevel(oldLevel);
+// }
+
 
 void
 Thread::Yield()
@@ -230,16 +217,27 @@ Thread::Yield()
 
     // `nextThread` can be the same as `kernel->currentThread`.
     kernel->scheduler->Run(nextThread, FALSE);
-    
-
-    // if (nextThread != NULL) {
-    //     kernel->scheduler->ReadyToRun(this);
-    //     kernel->scheduler->Run(nextThread, FALSE);
-    // }
 
     (void) kernel->interrupt->SetLevel(oldLevel);
 }
 
+
+// void
+// Thread::Sleep(bool finishing)
+// {
+//     Thread *nextThread;
+    
+//     ASSERT(this == kernel->currentThread);
+//     ASSERT(kernel->interrupt->getLevel() == IntOff);
+    
+
+//     status = BLOCKED;
+//     while ((nextThread = kernel->scheduler->FindNextToRun()) == NULL) {
+// 		    kernel->interrupt->Idle();	
+// 	   }    
+
+//     kernel->scheduler-> Run(nextThread, finishing); 
+// }
 
 
 void
@@ -248,11 +246,11 @@ Thread::Sleep(bool finishing)
     ASSERT(this == kernel->currentThread);
     ASSERT(kernel->interrupt->getLevel() == IntOff);
 
+
     if(!finishing){
 
-        Thread *curThread = kernel->currentThread;
         double t_cur = (double)kernel->stats->totalTicks;
-        ThreadSchedulingBlock *tsb = curThread->tsb;
+        ThreadSchedulingBlock *tsb = this->tsb;
 
         tsb->T += t_cur - tsb->t_start;
 
@@ -262,13 +260,13 @@ Thread::Sleep(bool finishing)
                
     }
 
-    Thread *nextThread;
 
+    Thread *nextThread;
     status = BLOCKED;
     while ((nextThread = kernel->scheduler->FindNextToRun()) == NULL) {
 		kernel->interrupt->Idle();	
 	}    
-
+    
     kernel->scheduler->Run(nextThread, finishing); 
 }
 

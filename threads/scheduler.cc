@@ -46,39 +46,18 @@ Scheduler::~Scheduler()
     delete readyList; 
 } 
 
-//----------------------------------------------------------------------
-// Scheduler::ReadyToRun
-// 	Mark a thread as ready, but not running.
-//	Put it on the ready list, for later scheduling onto the CPU.
-//
-//	"thread" is the thread to be put on the ready list.
-//----------------------------------------------------------------------
 
-void
-Scheduler::ReadyToRun(Thread *thread)
-{
-    ASSERT(kernel->interrupt->getLevel() == IntOff);
 
-    if(thread->getStatus() == JUST_CREATED || thread->getStatus() == BLOCKED){
-        CheckPreempt(thread);
-    }
-
-    thread->setStatus(READY);
-    readyList->Insert(thread->tsb);
-}
 
 
 void Scheduler::CheckPreempt(Thread *thread){
 
-    MachineStatus status = interrupt->getStatus();
+    MachineStatus status = kernel->interrupt->getStatus();
     // if status == IdelMode: no thread is running right now -> no need to preempt.    
     if (status != IdleMode) { 
         
         double t_cur = (double)kernel->stats->totalTicks;
         double t_key_cur = t_cur - kernel->currentThread->tsb->t_start;
-        if(t_key_cur < 0){
-            t_key_cur = 0;
-        }
 
         if(thread->tsb->t_key < t_key_cur){
             kernel->interrupt->Preempt();
@@ -88,46 +67,33 @@ void Scheduler::CheckPreempt(Thread *thread){
 
 
 
+void
+Scheduler::ReadyToRun(Thread *thread)
+{
+    ASSERT(kernel->interrupt->getLevel() == IntOff);
+
+    if(thread->getStatus() == BLOCKED){
+        CheckPreempt(thread);
+    }
+
+    thread->setStatus(READY);
+    readyList->Insert(thread->tsb);
+}
+
+
+
 Thread *
 Scheduler::FindNextToRun()
 {
 
-    ASSERT(kernel->interrupt->getLevel() \
-                                == IntOff);
+    ASSERT(kernel->interrupt->getLevel() == IntOff);
+
     if (readyList->IsEmpty()) {
 		return NULL;
     } else {
 
-
-        // /* for current thread */
-        
-        // Thread *curThread = kernel->currentThread;
-
-        // double t_cur = (double)kernel->stats->totalTicks;
-        // ThreadSchedulingBlock *tsb;
-
-        
-        // tsb = curThread->tsb;
-        // tsb->T += t_cur - tsb->t_start;
-
-        // if(curThread->getStatus() == RUNNING){ // running -> ready.
-            
-        //     tsb->t_key = tsb->t_pred - tsb->T;
-        //     if(tsb->t_key < 0){
-        //         tsb->t_key = 0;
-        //     }
-        // }
-        // else if(curThread->getStatus() == BLOCKED){ // running -> waiting (and finishing).
-        //     tsb->t_pred = 0.5 * tsb->T + 0.5 * tsb->t_pred;
-        //     tsb->t_key = tsb->t_pred;
-        //     tsb->T = 0;
-        // }
-
-
-        /* for next thread */
         Thread *nextThread =  readyList->RemoveFront()->thread;
-        ThreadSchedulingBlock *tsb = nextThread->tsb;
-        tsb->t_start = t_cur;
+        nextThread->tsb->t_start = (double)kernel->stats->totalTicks;
 
     	return nextThread;
     }

@@ -137,6 +137,7 @@ class Interrupt {
     //bool putBusy;               // Is a PrintInt operation in progress
                                   //If so, you cannoot do another one
     bool yieldOnReturn; 	// TRUE if we are to context switch
+    bool preempt;
 				// on return from the interrupt handler
     MachineStatus status;	// idle, kernel mode, user mode
 

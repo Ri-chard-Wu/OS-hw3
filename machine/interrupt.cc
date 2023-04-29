@@ -224,23 +224,17 @@ Interrupt::Preempt()
 void
 Interrupt::Idle()
 {
-    DEBUG(dbgInt, "Machine idling; checking for interrupts.");
     status = IdleMode;
-	DEBUG(dbgTraCode, "In Interrupt::Idle, into CheckIfDue, " << kernel->stats->totalTicks);
     if (CheckIfDue(TRUE)) {	// check for any pending interrupts
-	DEBUG(dbgTraCode, "In Interrupt::Idle, return true from CheckIfDue, " << kernel->stats->totalTicks);
-	status = SystemMode;
-	return;			// return in case there's now
-				// a runnable thread
+        status = SystemMode;
+        return;			// return in case there's now         
     }
-	DEBUG(dbgTraCode, "In Interrupt::Idle, return false from CheckIfDue, " << kernel->stats->totalTicks);
 
     // if there are no pending interrupts, and nothing is on the ready
     // queue, it is time to stop.   If the console or the network is 
     // operating, there are *always* pending interrupts, so this code
     // is not reached.  Instead, the halt must be invoked by the user program.
 
-    DEBUG(dbgInt, "Machine idle.  No interrupts to do.");
     cout << "No threads ready or runnable, and no pending interrupts.\n";
     cout << "Assuming the program completed.\n";
     Halt();
@@ -342,12 +336,12 @@ Interrupt::CheckIfDue(bool advanceClock)
     Statistics *stats = kernel->stats;
 
     ASSERT(level == IntOff);		// interrupts need to be disabled,
-					// to invoke an interrupt handler
+				                    	// to invoke an interrupt handler
     if (debug->IsEnabled(dbgInt)) {
-	DumpState();
+	    DumpState();
     }
     if (pending->IsEmpty()) {   	// no pending interrupts
-	return FALSE;	
+	    return FALSE;	
     }		
     next = pending->Front();
 
@@ -356,14 +350,12 @@ Interrupt::CheckIfDue(bool advanceClock)
             return FALSE;
         }
         else {      		// advance the clock to next interrupt
-	    stats->idleTicks += (next->when - stats->totalTicks);
-	    stats->totalTicks = next->when;
-	    // UDelay(1000L); // rcgood - to stop nachos from spinning.
-	}
+	        stats->idleTicks += (next->when - stats->totalTicks);
+            stats->totalTicks = next->when;
+            // UDelay(1000L); // rcgood - to stop nachos from spinning.
+	    }
     }
 
-    DEBUG(dbgInt, "Invoking interrupt handler for the ");
-    DEBUG(dbgInt, intTypeNames[next->type] << " at time " << next->when);
 
     if (kernel->machine != NULL) {
     	kernel->machine->DelayedLoad(0, 0);
@@ -372,12 +364,11 @@ Interrupt::CheckIfDue(bool advanceClock)
     inHandler = TRUE;
     do {
         next = pending->RemoveFront();    // pull interrupt off list
-		DEBUG(dbgTraCode, "In Interrupt::CheckIfDue, into callOnInterrupt->CallBack, " << stats->totalTicks);
         next->callOnInterrupt->CallBack();// call the interrupt handler
-		DEBUG(dbgTraCode, "In Interrupt::CheckIfDue, return from callOnInterrupt->CallBack, " << stats->totalTicks);
-	delete next;
+	    delete next;
     } while (!pending->IsEmpty() 
     		&& (pending->Front()->when <= stats->totalTicks));
+
     inHandler = FALSE;
     return TRUE;
 }
