@@ -1,0 +1,67 @@
+Binary file /home/os2023/os23s67/NachOS-4.0_MP3/code/build.linux/timer.o matches
+Binary file /home/os2023/os23s67/NachOS-4.0_MP3/code/build.linux/exception.o matches
+Binary file /home/os2023/os23s67/NachOS-4.0_MP3/code/build.linux/main.o matches
+Binary file /home/os2023/os23s67/NachOS-4.0_MP3/code/build.linux/alarm.o matches
+Binary file /home/os2023/os23s67/NachOS-4.0_MP3/code/build.linux/post.o matches
+Binary file /home/os2023/os23s67/NachOS-4.0_MP3/code/build.linux/mipssim.o matches
+Binary file /home/os2023/os23s67/NachOS-4.0_MP3/code/build.linux/stats.o matches
+Binary file /home/os2023/os23s67/NachOS-4.0_MP3/code/build.linux/interrupt.o matches
+Binary file /home/os2023/os23s67/NachOS-4.0_MP3/code/build.linux/synchconsole.o matches
+Binary file /home/os2023/os23s67/NachOS-4.0_MP3/code/build.linux/network.o matches
+Binary file /home/os2023/os23s67/NachOS-4.0_MP3/code/build.linux/console.o matches
+Binary file /home/os2023/os23s67/NachOS-4.0_MP3/code/build.linux/synchdisk.o matches
+Binary file /home/os2023/os23s67/NachOS-4.0_MP3/code/build.linux/synch.o matches
+Binary file /home/os2023/os23s67/NachOS-4.0_MP3/code/build.linux/machine.o matches
+Binary file /home/os2023/os23s67/NachOS-4.0_MP3/code/build.linux/nachos matches
+Binary file /home/os2023/os23s67/NachOS-4.0_MP3/code/build.linux/addrspace.o matches
+Binary file /home/os2023/os23s67/NachOS-4.0_MP3/code/build.linux/filehdr.o matches
+Binary file /home/os2023/os23s67/NachOS-4.0_MP3/code/build.linux/thread.o matches
+Binary file /home/os2023/os23s67/NachOS-4.0_MP3/code/build.linux/disk.o matches
+Binary file /home/os2023/os23s67/NachOS-4.0_MP3/code/build.linux/kernel.o matches
+Binary file /home/os2023/os23s67/NachOS-4.0_MP3/code/build.linux/scheduler.o matches
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/interrupt.cc:        stats->totalTicks += SystemTick;
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/interrupt.cc:	stats->totalTicks += UserTick;
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/interrupt.cc:    DEBUG(dbgInt, "== Tick " << stats->totalTicks << " ==");
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/interrupt.cc:	DEBUG(dbgTraCode, "In Interrupt::Idle, into CheckIfDue, " << kernel->stats->totalTicks);
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/interrupt.cc:	DEBUG(dbgTraCode, "In Interrupt::Idle, return true from CheckIfDue, " << kernel->stats->totalTicks);
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/interrupt.cc:	DEBUG(dbgTraCode, "In Interrupt::Idle, return false from CheckIfDue, " << kernel->stats->totalTicks);
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/interrupt.cc:    int when = kernel->stats->totalTicks + fromNow;
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/interrupt.cc:    if (next->when > stats->totalTicks) {
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/interrupt.cc:	    stats->idleTicks += (next->when - stats->totalTicks);
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/interrupt.cc:	    stats->totalTicks = next->when;
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/interrupt.cc:		DEBUG(dbgTraCode, "In Interrupt::CheckIfDue, into callOnInterrupt->CallBack, " << stats->totalTicks);
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/interrupt.cc:		DEBUG(dbgTraCode, "In Interrupt::CheckIfDue, return from callOnInterrupt->CallBack, " << stats->totalTicks);
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/interrupt.cc:    		&& (pending->Front()->when <= stats->totalTicks));
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/interrupt.cc:    cout << "Time: " << kernel->stats->totalTicks;
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/machine.cc:      cout << kernel->stats->totalTicks << ">";
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/console.cc:	DEBUG(dbgTraCode, "In ConsoleOutput::CallBack(), " << kernel->stats->totalTicks);
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/mipssim.cc:	cout << ", at time: " << kernel->stats->totalTicks << "\n";
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/mipssim.cc:	DEBUG(dbgTraCode, "In Machine::Run(), into OneInstruction " << "== Tick " << kernel->stats->totalTicks << " ==");
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/mipssim.cc:	DEBUG(dbgTraCode, "In Machine::Run(), return from OneInstruction  " << "== Tick " << kernel->stats->totalTicks << " ==");
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/mipssim.cc:	DEBUG(dbgTraCode, "In Machine::Run(), into OneTick " << "== Tick " << kernel->stats->totalTicks << " ==");
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/mipssim.cc:	DEBUG(dbgTraCode, "In Machine::Run(), return from OneTick " << "== Tick " << kernel->stats->totalTicks << " ==");
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/mipssim.cc:	if (singleStep && (runUntilTime <= kernel->stats->totalTicks))
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/mipssim.cc:	DEBUG(dbgTraCode, "In Machine::OneInstruction, RaiseException(SyscallException, 0), " << kernel->stats->totalTicks);
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/stats.h:    int totalTicks;      	// Total time running Nachos
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/stats.cc:    totalTicks = idleTicks = systemTicks = userTicks = 0;
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/stats.cc:    cout << "Ticks: total " << totalTicks << ", idle " << idleTicks;
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/disk.cc:    int over = (kernel->stats->totalTicks + seek) % RotationTime; 
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/disk.cc:    int timeAfter = kernel->stats->totalTicks + seek + rotation;
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/disk.cc:	bufferInit = kernel->stats->totalTicks + seek + rotate;
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/timer.h://	every time stats->totalTicks has increased by TimerTicks.
+/home/os2023/os23s67/NachOS-4.0_MP3/code/machine/timer.cc://      every time stats->totalTicks has increased by TimerTicks.
+/home/os2023/os23s67/NachOS-4.0_MP3/code/userprog/synchconsole.cc:	DEBUG(dbgTraCode, "In SynchConsoleOutput::PutChar, into consoleOutput->PutChar, " << kernel->stats->totalTicks);
+/home/os2023/os23s67/NachOS-4.0_MP3/code/userprog/synchconsole.cc:	DEBUG(dbgTraCode, "In SynchConsoleOutput::PutChar, return from consoleOutput->PutChar, " << kernel->stats->totalTicks);
+/home/os2023/os23s67/NachOS-4.0_MP3/code/userprog/synchconsole.cc:	DEBUG(dbgTraCode, "In SynchConsoleOutput::PutChar, into waitFor->P(), " << kernel->stats->totalTicks);
+/home/os2023/os23s67/NachOS-4.0_MP3/code/userprog/synchconsole.cc:	DEBUG(dbgTraCode, "In SynchConsoleOutput::PutChar, return form  waitFor->P(), " << kernel->stats->totalTicks);
+/home/os2023/os23s67/NachOS-4.0_MP3/code/userprog/synchconsole.cc:    DEBUG(dbgTraCode, "In SynchConsoleOutput::CallBack(), " << kernel->stats->totalTicks);
+/home/os2023/os23s67/NachOS-4.0_MP3/code/userprog/ksyscall.h:  DEBUG(dbgTraCode, "In ksyscall.h:SysPrintInt, into synchConsoleOut->PutInt, " << kernel->stats->totalTicks);
+/home/os2023/os23s67/NachOS-4.0_MP3/code/userprog/ksyscall.h:  DEBUG(dbgTraCode, "In ksyscall.h:SysPrintInt, return from synchConsoleOut->PutInt, " << kernel->stats->totalTicks);
+/home/os2023/os23s67/NachOS-4.0_MP3/code/userprog/exception.cc:    DEBUG(dbgTraCode, "In ExceptionHandler(), Received Exception " << which << " type: " << type << ", " << kernel->stats->totalTicks);
+/home/os2023/os23s67/NachOS-4.0_MP3/code/userprog/exception.cc:		DEBUG(dbgTraCode, "In ExceptionHandler(), into SysPrintInt, " << kernel->stats->totalTicks);    
+/home/os2023/os23s67/NachOS-4.0_MP3/code/userprog/exception.cc:		DEBUG(dbgTraCode, "In ExceptionHandler(), return from SysPrintInt, " << kernel->stats->totalTicks);
+/home/os2023/os23s67/NachOS-4.0_MP3/code/threads/thread.cc:    DEBUG(dbgTraCode, "In Thread::Sleep, Sleeping thread: " << name << ", " << kernel->stats->totalTicks);
+/home/os2023/os23s67/NachOS-4.0_MP3/code/threads/scheduler.cc:         cout << "totalTicks: " 
+/home/os2023/os23s67/NachOS-4.0_MP3/code/threads/scheduler.cc:              << kernel->stats->totalTicks
+/home/os2023/os23s67/NachOS-4.0_MP3/code/threads/synch.cc:	DEBUG(dbgTraCode, "In Semaphore::P(), " << kernel->stats->totalTicks);
+/home/os2023/os23s67/NachOS-4.0_MP3/code/threads/synch.cc:	DEBUG(dbgTraCode, "In Semaphore::V(), " << kernel->stats->totalTicks);
