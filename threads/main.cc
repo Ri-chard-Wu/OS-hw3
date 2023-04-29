@@ -186,62 +186,61 @@ main(int argc, char **argv)
     // the Kernel constructor
     for (i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-d") == 0) {
-	    ASSERT(i + 1 < argc);   // next argument is debug string
+	        ASSERT(i + 1 < argc);   // next argument is debug string
             debugArg = argv[i + 1];
-	    i++;
-	}
-	else if (strcmp(argv[i], "-z") == 0) {
-            cout << copyright << "\n";
-	}
-	else if (strcmp(argv[i], "-x") == 0) {
-	    ASSERT(i + 1 < argc);
-	    userProgName = argv[i + 1];
-	    i++;
-	}
-	else if (strcmp(argv[i], "-K") == 0) {
-	    threadTestFlag = TRUE;
-	}
-	else if (strcmp(argv[i], "-C") == 0) {
-	    consoleTestFlag = TRUE;
-	}
-	else if (strcmp(argv[i], "-N") == 0) {
-	    networkTestFlag = TRUE;
-	}
+	        i++;
+	    }
+        else if (strcmp(argv[i], "-z") == 0) {
+                cout << copyright << "\n";
+        }
+        else if (strcmp(argv[i], "-x") == 0) {
+            ASSERT(i + 1 < argc);
+            userProgName = argv[i + 1];
+            i++;
+        }
+        else if (strcmp(argv[i], "-K") == 0) {
+            threadTestFlag = TRUE;
+        }
+        else if (strcmp(argv[i], "-C") == 0) {
+            consoleTestFlag = TRUE;
+        }
+        else if (strcmp(argv[i], "-N") == 0) {
+            networkTestFlag = TRUE;
+        }
 #ifndef FILESYS_STUB
-	else if (strcmp(argv[i], "-cp") == 0) {
-	    ASSERT(i + 2 < argc);
-	    copyUnixFileName = argv[i + 1];
-	    copyNachosFileName = argv[i + 2];
-	    i += 2;
-	}
-	else if (strcmp(argv[i], "-p") == 0) {
-	    ASSERT(i + 1 < argc);
-	    printFileName = argv[i + 1];
-	    i++;
-	}
-	else if (strcmp(argv[i], "-r") == 0) {
-	    ASSERT(i + 1 < argc);
-	    removeFileName = argv[i + 1];
-	    i++;
-	}
-	else if (strcmp(argv[i], "-l") == 0) {
-	    dirListFlag = true;
-	}
-	else if (strcmp(argv[i], "-D") == 0) {
-	    dumpFlag = true;
-	}
+        else if (strcmp(argv[i], "-cp") == 0) {
+            ASSERT(i + 2 < argc);
+            copyUnixFileName = argv[i + 1];
+            copyNachosFileName = argv[i + 2];
+            i += 2;
+        }
+        else if (strcmp(argv[i], "-p") == 0) {
+            ASSERT(i + 1 < argc);
+            printFileName = argv[i + 1];
+            i++;
+        }
+        else if (strcmp(argv[i], "-r") == 0) {
+            ASSERT(i + 1 < argc);
+            removeFileName = argv[i + 1];
+            i++;
+        }
+        else if (strcmp(argv[i], "-l") == 0) {
+            dirListFlag = true;
+        }
+        else if (strcmp(argv[i], "-D") == 0) {
+            dumpFlag = true;
+        }
 #endif //FILESYS_STUB
-	else if (strcmp(argv[i], "-u") == 0) {
+	    else if (strcmp(argv[i], "-u") == 0) {
             cout << "Partial usage: nachos [-z -d debugFlags]\n";
             cout << "Partial usage: nachos [-x programName]\n";
-	    cout << "Partial usage: nachos [-K] [-C] [-N]\n";
+	        cout << "Partial usage: nachos [-K] [-C] [-N]\n";
 #ifndef FILESYS_STUB
             cout << "Partial usage: nachos [-cp UnixFile NachosFile]\n";
             cout << "Partial usage: nachos [-p fileName] [-r fileName]\n";
             cout << "Partial usage: nachos [-l] [-D]\n";
 #endif //FILESYS_STUB
-	}
-
+	    }
     }
     debug = new Debug(debugArg);
     

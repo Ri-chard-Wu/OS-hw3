@@ -76,6 +76,11 @@ Scheduler::ReadyToRun(Thread *thread)
         CheckPreempt(thread);
     }
 
+    DEBUG('z', "[A] Tick [" <<  kernel->stats->totalTicks
+                            << "]: Thread [" 
+                            << thread->getName() << ", " << thread->getID()
+                            << "] is inserted into queue");
+
     thread->setStatus(READY);
     readyList->Insert(thread->tsb);
 }
@@ -86,14 +91,27 @@ Thread *
 Scheduler::FindNextToRun()
 {
 
+
+    static int counter = 0;
+    counter++;
+
     ASSERT(kernel->interrupt->getLevel() == IntOff);
 
     if (readyList->IsEmpty()) {
+        // cout << counter << ": nextThread: NULL\n";
 		return NULL;
     } else {
 
         Thread *nextThread =  readyList->RemoveFront()->thread;
         nextThread->tsb->t_start = (double)kernel->stats->totalTicks;
+
+
+        DEBUG('z', "[B] Tick [" <<  kernel->stats->totalTicks
+                                << "]: Thread [" 
+                                << nextThread->getName() << ", " << nextThread->getID()
+                                << "] is removed from queue");
+                                
+        // cout << counter << ": nextThread: " << nextThread->getName() << "\n";
 
     	return nextThread;
     }

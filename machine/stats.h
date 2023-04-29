@@ -58,3 +58,4 @@ const int NetworkTime =	 100;  	// time to send or receive one packet
 const int TimerTicks = 	 100;  	// (average) time between timer interrupts
 
 #endif // STATS_H
+

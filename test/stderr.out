@@ -1,0 +1,47 @@
+[A] Tick [10]: Thread [hw3t1, 1] is inserted into queue
+[A] Tick [20]: Thread [hw3t2, 2] is inserted into queue
+[B] Tick [30]: Thread [hw3t1, 1] is removed from queue
+
+// t1 output 1st char
+[C] Tick [1162]: Thread [hw3t1, 1] update approximate burst time, from: [0], add [1132], to [566]
+
+[B] Tick [1162]: Thread [hw3t2, 2] is removed from queue
+[D] Tick [1162]: Thread [hw3t2, 2] is now selected for execution, thread [hw3t1, 1] starts IO, and it has executed [1132] ticks
+[A] Tick [1172]: Thread [hw3t1, 1] is inserted into queue
+
+// t2 ocannot acquire lock.
+[C] Tick [111184]: Thread [hw3t2, 2] update approximate burst time, from: [0], add [110022], to [55011]
+
+[B] Tick [111184]: Thread [hw3t1, 1] is removed from queue
+[D] Tick [111184]: Thread [hw3t1, 1] is now selected for execution, thread [hw3t2, 2] starts IO, and it has executed [110022] ticks
+
+// t1 output 2nd char.
+// 111194 -> 111195: console write time is 1.
+// simulated cpu will be idle for 1 unit time.
+[C] Tick [111194]: Thread [hw3t1, 1] update approximate burst time, from: [566], add [10], to [288]
+
+// done writing 2nd char to console, wake t1 up.
+[A] Tick [111195]: Thread [hw3t1, 1] is inserted into queue
+[B] Tick [111195]: Thread [hw3t1, 1] is removed from queue
+[D] Tick [111195]: Thread [hw3t1, 1] is now selected for execution, thread [hw3t1, 1] starts IO, and it has executed [10] ticks
+
+// t1 have done writing all char's. Exiting critical section and release lock. 
+// t2 is waken up when lock is release, but since its estimated burst time is not shorter than that of t1,
+// so it cannot preempt t1.
+[A] Tick [111205]: Thread [hw3t2, 2] is inserted into queue
+
+// t1 terminated(finished remaining 20000 loops), now we can run t2.
+[B] Tick [331220]: Thread [hw3t2, 2] is removed from queue
+
+// t2 output 1st char.
+[C] Tick [331230]: Thread [hw3t2, 2] update approximate burst time, from: [55011], add [10], to [27510.5]
+
+// 1 unit time later, char output done, t2 is waken up.
+[A] Tick [331231]: Thread [hw3t2, 2] is inserted into queue
+[B] Tick [331231]: Thread [hw3t2, 2] is removed from queue
+
+[D] Tick [331231]: Thread [hw3t2, 2] is now selected for execution, thread [hw3t2, 2] starts IO, and it has executed [10] ticks
+[C] Tick [331241]: Thread [hw3t2, 2] update approximate burst time, from: [27510.5], add [10], to [13760.2]
+[A] Tick [331242]: Thread [hw3t2, 2] is inserted into queue
+[B] Tick [331242]: Thread [hw3t2, 2] is removed from queue
+[D] Tick [331242]: Thread [hw3t2, 2] is now selected for execution, thread [hw3t2, 2] starts IO, and it has executed [10] ticks

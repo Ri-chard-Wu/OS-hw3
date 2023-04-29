@@ -191,7 +191,7 @@ Thread::Finish ()
 
 
 void
-Thread::Yield()
+Thread::Yield() // preemption
 {
     
     IntStatus oldLevel = kernel->interrupt->SetLevel(IntOff);
@@ -202,7 +202,7 @@ Thread::Yield()
 
     // update tsb for running -> ready.
     double t_cur = (double)kernel->stats->totalTicks;
-    ThreadSchedulingBlock *tsb = kernel->currentThread->tsb;
+    ThreadSchedulingBlock *tsb = this->tsb;
     tsb->T += t_cur - tsb->t_start;
 
     tsb->t_key = tsb->t_pred - tsb->T;
@@ -214,6 +214,18 @@ Thread::Yield()
     kernel->scheduler->ReadyToRun(this);
 
     Thread *nextThread = kernel->scheduler->FindNextToRun();
+
+
+    DEBUG('z', "[E] Tick [" <<  kernel->stats->totalTicks
+                            << "]: Thread [" 
+                            << nextThread->getName() << ", " << nextThread->getID()
+                            << "] is now selected for execution, thread ["
+                            << this->getName() << ", " << this->getID()
+                            << "] is preempted, and it has executed ["
+                            << tsb->T
+                            << "] ticks"
+                            );
+
 
     // `nextThread` can be the same as `kernel->currentThread`.
     kernel->scheduler->Run(nextThread, FALSE);
@@ -246,6 +258,8 @@ Thread::Sleep(bool finishing)
     ASSERT(this == kernel->currentThread);
     ASSERT(kernel->interrupt->getLevel() == IntOff);
 
+    double t_accu;
+    double t_pred_prev;
 
     if(!finishing){
 
@@ -254,10 +268,27 @@ Thread::Sleep(bool finishing)
 
         tsb->T += t_cur - tsb->t_start;
 
+        t_accu = tsb->T;
+        t_pred_prev = tsb->t_pred;
+
         tsb->t_pred = 0.5 * tsb->T + 0.5 * tsb->t_pred;
         tsb->t_key = tsb->t_pred;
         tsb->T = 0;
-               
+
+
+        DEBUG('z', "[C] Tick [" <<  kernel->stats->totalTicks
+                                << "]: Thread [" 
+                                << this->getName() << ", " << this->getID()
+                                << "] update approximate burst time, from: ["
+                                << t_pred_prev
+                                << "], add ["
+                                << t_accu
+                                << "], to ["
+                                << tsb->t_pred
+                                << "]"
+                                );
+
+
     }
 
 
@@ -267,6 +298,19 @@ Thread::Sleep(bool finishing)
 		kernel->interrupt->Idle();	
 	}    
     
+
+    if(!finishing){
+        DEBUG('z', "[D] Tick [" <<  kernel->stats->totalTicks
+                                << "]: Thread [" 
+                                << nextThread->getName() << ", " << nextThread->getID()
+                                << "] is now selected for execution, thread ["
+                                << this->getName() << ", " << this->getID()
+                                << "] starts IO, and it has executed ["
+                                << t_accu
+                                << "] ticks"
+                                );
+    }
+
     kernel->scheduler->Run(nextThread, finishing); 
 }
 

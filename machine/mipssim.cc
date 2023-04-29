@@ -64,15 +64,8 @@ Machine::Run()
     }
     kernel->interrupt->setStatus(UserMode);
     for (;;) {
-	DEBUG(dbgTraCode, "In Machine::Run(), into OneInstruction " << "== Tick " << kernel->stats->totalTicks << " ==");
         OneInstruction(instr);
-	DEBUG(dbgTraCode, "In Machine::Run(), return from OneInstruction  " << "== Tick " << kernel->stats->totalTicks << " ==");
-		
-	DEBUG(dbgTraCode, "In Machine::Run(), into OneTick " << "== Tick " << kernel->stats->totalTicks << " ==");
-	kernel->interrupt->OneTick();
-	DEBUG(dbgTraCode, "In Machine::Run(), return from OneTick " << "== Tick " << kernel->stats->totalTicks << " ==");
-	if (singleStep && (runUntilTime <= kernel->stats->totalTicks))
-		Debugger();
+		kernel->interrupt->OneTick();
     }
 }
 
