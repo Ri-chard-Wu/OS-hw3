@@ -104,8 +104,9 @@ class Interrupt {
     int ReadFile(char *buffer, int size, OpenFileId id);
     int CloseFile(OpenFileId id);
  
-    void YieldOnReturn();	// cause a context switch on return 
-				// from an interrupt handler
+    void YieldOnReturn();	
+    void Preempt();	
+    
 
     MachineStatus getStatus() { return status; } 
     void setStatus(MachineStatus st) { status = st; }

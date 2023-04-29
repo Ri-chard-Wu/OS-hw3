@@ -206,59 +206,74 @@ Thread::Finish ()
 void
 Thread::Yield()
 {
-    Thread *nextThread;
-    IntStatus oldLevel = \
-            kernel->interrupt->SetLevel(IntOff);
+    
+    IntStatus oldLevel = kernel->interrupt->SetLevel(IntOff);
     ASSERT(this == kernel->currentThread);
-    nextThread = \
-            kernel->scheduler->FindNextToRun();
-    if (nextThread != NULL) {
-        kernel->scheduler->ReadyToRun(this);
-        kernel->scheduler->Run(nextThread, FALSE);
+
+
+
+
+    // update tsb for running -> ready.
+    double t_cur = (double)kernel->stats->totalTicks;
+    ThreadSchedulingBlock *tsb = kernel->currentThread->tsb;
+    tsb->T += t_cur - tsb->t_start;
+
+    tsb->t_key = tsb->t_pred - tsb->T;
+    if(tsb->t_key < 0){
+        tsb->t_key = 0;
     }
+
+    
+    kernel->scheduler->ReadyToRun(this);
+
+    Thread *nextThread = kernel->scheduler->FindNextToRun();
+
+    // `nextThread` can be the same as `kernel->currentThread`.
+    kernel->scheduler->Run(nextThread, FALSE);
+    
+
+    // if (nextThread != NULL) {
+    //     kernel->scheduler->ReadyToRun(this);
+    //     kernel->scheduler->Run(nextThread, FALSE);
+    // }
+
     (void) kernel->interrupt->SetLevel(oldLevel);
 }
 
-//----------------------------------------------------------------------
-// Thread::Sleep
-// 	Relinquish the CPU, because the current thread has either
-//	finished or is blocked waiting on a synchronization 
-//	variable (Semaphore, Lock, or Condition).  In the latter case,
-//	eventually some thread will wake this thread up, and put it
-//	back on the ready queue, so that it can be re-scheduled.
-//
-//	NOTE: if there are no threads on the ready queue, that means
-//	we have no thread to run.  "Interrupt::Idle" is called
-//	to signify that we should idle the CPU until the next I/O interrupt
-//	occurs (the only thing that could cause a thread to become
-//	ready to run).
-//
-//	NOTE: we assume interrupts are already disabled, because it
-//	is called from the synchronization routines which must
-//	disable interrupts for atomicity.   We need interrupts off 
-//	so that there can't be a time slice between pulling the first thread
-//	off the ready list, and switching to it.
-//----------------------------------------------------------------------
+
+
 void
 Thread::Sleep(bool finishing)
 {
-    Thread *nextThread;
-    
     ASSERT(this == kernel->currentThread);
     ASSERT(kernel->interrupt->getLevel() == IntOff);
-    
-    DEBUG(dbgThread, "Sleeping thread: " << name);
-    DEBUG(dbgTraCode, "In Thread::Sleep, Sleeping thread: " << name << ", " << kernel->stats->totalTicks);
+
+    if(!finishing){
+
+        Thread *curThread = kernel->currentThread;
+        double t_cur = (double)kernel->stats->totalTicks;
+        ThreadSchedulingBlock *tsb = curThread->tsb;
+
+        tsb->T += t_cur - tsb->t_start;
+
+        tsb->t_pred = 0.5 * tsb->T + 0.5 * tsb->t_pred;
+        tsb->t_key = tsb->t_pred;
+        tsb->T = 0;
+               
+    }
+
+    Thread *nextThread;
 
     status = BLOCKED;
-	//cout << "debug Thread::Sleep " << name << "wait for Idle\n";
     while ((nextThread = kernel->scheduler->FindNextToRun()) == NULL) {
-		kernel->interrupt->Idle();	// no one to run, wait for an interrupt
+		kernel->interrupt->Idle();	
 	}    
-    // returns when it's time for us to run
-    kernel->scheduler->\
-        Run(nextThread, finishing); 
+
+    kernel->scheduler->Run(nextThread, finishing); 
 }
+
+
+
 
 //----------------------------------------------------------------------
 // ThreadBegin, ThreadFinish,  ThreadPrint

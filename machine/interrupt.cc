@@ -74,7 +74,10 @@ Interrupt::Interrupt()
     level = IntOff;
     pending = new SortedList<PendingInterrupt *>(PendingCompare);
     inHandler = FALSE;
+    
     yieldOnReturn = FALSE;
+    preempt = FALSE;
+
     status = SystemMode;
 }
 
@@ -166,12 +169,19 @@ Interrupt::OneTick()
 				// interrupts disabled)
     CheckIfDue(FALSE);		// check for pending interrupts
     ChangeLevel(IntOff, IntOn);	// re-enable interrupts
+
     if (yieldOnReturn) {	// if the timer device handler asked 
     				// for a context switch, ok to do it now
         yieldOnReturn = FALSE;
         status = SystemMode;		// yield is a kernel routine
         kernel->currentThread->Yield();
         status = oldStatus;
+    }
+    else if(preempt){
+        preempt = FALSE;
+        status = SystemMode;		// yield is a kernel routine
+        kernel->currentThread->Yield();
+        status = oldStatus;        
     }
 }
 
@@ -191,6 +201,13 @@ Interrupt::YieldOnReturn()
 { 
     ASSERT(inHandler == TRUE);  
     yieldOnReturn = TRUE; 
+}
+
+
+void
+Interrupt::Preempt()
+{ 
+    preempt = TRUE; 
 }
 
 //----------------------------------------------------------------------

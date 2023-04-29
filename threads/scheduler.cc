@@ -55,23 +55,38 @@ Scheduler::~Scheduler()
 //----------------------------------------------------------------------
 
 void
-Scheduler::ReadyToRun (Thread *thread)
+Scheduler::ReadyToRun(Thread *thread)
 {
-    ASSERT(kernel->interrupt->getLevel()\
-                             == IntOff);
-    thread->setStatus(READY);
+    ASSERT(kernel->interrupt->getLevel() == IntOff);
 
-    // readyList->Append(thread);
+    if(thread->getStatus() == JUST_CREATED || thread->getStatus() == BLOCKED){
+        CheckPreempt(thread);
+    }
+
+    thread->setStatus(READY);
     readyList->Insert(thread->tsb);
 }
 
-//----------------------------------------------------------------------
-// Scheduler::FindNextToRun
-// 	Return the next thread to be scheduled onto the CPU.
-//	If there are no ready threads, return NULL.
-// Side effect:
-//	Thread is removed from the ready list.
-//----------------------------------------------------------------------
+
+void Scheduler::CheckPreempt(Thread *thread){
+
+    MachineStatus status = interrupt->getStatus();
+    // if status == IdelMode: no thread is running right now -> no need to preempt.    
+    if (status != IdleMode) { 
+        
+        double t_cur = (double)kernel->stats->totalTicks;
+        double t_key_cur = t_cur - kernel->currentThread->tsb->t_start;
+        if(t_key_cur < 0){
+            t_key_cur = 0;
+        }
+
+        if(thread->tsb->t_key < t_key_cur){
+            kernel->interrupt->Preempt();
+        }
+    }
+}
+
+
 
 Thread *
 Scheduler::FindNextToRun()
@@ -84,112 +99,81 @@ Scheduler::FindNextToRun()
     } else {
 
 
-        Thread *curThread = kernel->currentThread;
-        Thread *nextThread =  readyList->RemoveFront()->thread;
-        cout << "\n##########################\n";
-        cout << "\n\ncurThread name: " << curThread->getName() 
-             << "\n";
-        curThread->tsb->print();
+        // /* for current thread */
+        
+        // Thread *curThread = kernel->currentThread;
 
-        cout << "\n--------------------------\n";
-        cout << "\n\nnextThread name: " << nextThread->getName() 
-             << "\n";        
-        nextThread->tsb->print();
+        // double t_cur = (double)kernel->stats->totalTicks;
+        // ThreadSchedulingBlock *tsb;
 
+        
+        // tsb = curThread->tsb;
+        // tsb->T += t_cur - tsb->t_start;
 
-        //  cout << "totalTicks: " 
-        //       << kernel->stats->totalTicks
-        //       << "\n";
-
-        // cout << "nextThread name: " << nextThread->getName() 
-        //      << "\n";
-
-        // cout << "curThread name: " << curThread->getName() 
-        //      << "\n";
-
-        // cout << "getPrevStatus(): " 
-        //      << nextThread->getPrevStatus() 
-        //      << "\n\n";
-
-
-        double t_cur = (double)kernel->stats->totalTicks;
-        ThreadSchedulingBlock *tsb;
-
-
-        /* for current thread */
-
-        tsb = curThread->tsb;
-        tsb->T += t_cur - tsb->t_start;
-
-        if(curThread->getStatus() == RUNNING){ // running -> ready.
+        // if(curThread->getStatus() == RUNNING){ // running -> ready.
             
-            tsb->t_key = tsb->t_pred - tsb->T;
-            if(tsb->t_key < 0){
-                tsb->t_key = 0;
-            }
-        }
-        else if(curThread->getStatus() == BLOCKED){ // running -> waiting (and finishing).
-            tsb->t_pred = 0.5 * tsb->T + 0.5 * tsb->t_pred;
-            tsb->t_key = tsb->t_pred;
-            tsb->T = 0;
-        }
+        //     tsb->t_key = tsb->t_pred - tsb->T;
+        //     if(tsb->t_key < 0){
+        //         tsb->t_key = 0;
+        //     }
+        // }
+        // else if(curThread->getStatus() == BLOCKED){ // running -> waiting (and finishing).
+        //     tsb->t_pred = 0.5 * tsb->T + 0.5 * tsb->t_pred;
+        //     tsb->t_key = tsb->t_pred;
+        //     tsb->T = 0;
+        // }
 
 
         /* for next thread */
-
-        tsb = nextThread->tsb;
+        Thread *nextThread =  readyList->RemoveFront()->thread;
+        ThreadSchedulingBlock *tsb = nextThread->tsb;
         tsb->t_start = t_cur;
-
 
     	return nextThread;
     }
 }
 
-//----------------------------------------------------------------------
-// Scheduler::Run
-// 	Dispatch the CPU to nextThread.  Save the state of the old thread,
-//	and load the state of the new thread, by calling the machine
-//	dependent context switch routine, SWITCH.
-//
-//      Note: we assume the state of the previously running thread has
-//	already been changed from running to blocked or ready (depending).
-// Side effect:
-//	The global variable kernel->currentThread becomes nextThread.
-//
-//	"nextThread" is the thread to be put into the CPU.
-//	"finishing" is set if the current thread is to be deleted
-//		once we're no longer running on its stack
-//		(when the next thread starts running)
-//----------------------------------------------------------------------
+
 
 void
-Scheduler::Run (Thread *nextThread, 
-                    bool finishing)
+Scheduler::Run (Thread *nextThread, bool finishing)
 {
-    Thread *oldThread = kernel->currentThread;
-    ASSERT(kernel->interrupt->getLevel() \
-                                == IntOff);
-    if (finishing) {	// mark that we need to delete current thread
-        ASSERT(toBeDestroyed == NULL);
-	     toBeDestroyed = oldThread;
+    // previous running thread still has shorted estimated burst time.
+    if(nextThread == kernel->currentThread){ 
+
+        nextThread->setStatus(RUNNING);
+
+    }
+    else{
+
+        Thread *oldThread = kernel->currentThread;
+        ASSERT(kernel->interrupt->getLevel() == IntOff);
+        if (finishing) {	
+            ASSERT(toBeDestroyed == NULL);
+            toBeDestroyed = oldThread;
+        }
+
+        if (oldThread->space != NULL) {	
+            oldThread->SaveUserState(); 
+            oldThread->space->SaveState();
+        }
+        
+        oldThread->CheckOverflow();		    
+        kernel->currentThread = nextThread; 
+        nextThread->setStatus(RUNNING);     
+
+        SWITCH(oldThread, nextThread);
+
+        ASSERT(kernel->interrupt->getLevel()== IntOff);
+
+        CheckToBeDestroyed();		
+        if (oldThread->space != NULL) {	    
+            oldThread->RestoreUserState();  
+            oldThread->space->RestoreState();
+        }
+        
     }
 
-    if (oldThread->space != NULL) {	// if this thread is a user program,
-        oldThread->SaveUserState(); 	// save the user's CPU registers
-	    oldThread->space->SaveState();
-    }
-    
-    oldThread->CheckOverflow();		    // check if the old thread
-    kernel->currentThread = nextThread;  // switch to the next thread
-    nextThread->setStatus(RUNNING);      // nextThread is now running
-    SWITCH(oldThread, nextThread);
-    ASSERT(kernel->interrupt->getLevel()\
-                                 == IntOff);
-    CheckToBeDestroyed();		// check if thread we were running
-    if (oldThread->space != NULL) {	    // if there is an address space
-        oldThread->RestoreUserState();     // to restore, do it.
-	    oldThread->space->RestoreState();
-    }
 }
 
 //----------------------------------------------------------------------
