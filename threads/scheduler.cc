@@ -134,12 +134,13 @@ Scheduler::FindNextToRun()
 
          /* test */
 
+
         ThreadSchedulingBlock * tsb_test;
         SortedList<ThreadSchedulingBlock *>\
              srtdList(ThreadSchedulingBlock::Compare);
         
         tsb_test = new ThreadSchedulingBlock;
-        tsb_test->t_key = 2.5;
+        tsb_test->t_key = 2.50;
         srtdList.Insert(tsb_test);
 
         tsb_test = new ThreadSchedulingBlock;
