@@ -66,8 +66,16 @@ void Scheduler::CheckPreempt(Thread *thread){
         double t_key_cur = kernel->currentThread->tsb->t_pred - T_cur;
 
         if(thread->tsb->t_key < t_key_cur){
-            DEBUG('z', "Tick [" <<  kernel->stats->totalTicks
-                                << "]: CheckPreempt(), thread: " << thread->getName());            
+            DEBUG('z', "[G] Tick [" <<  kernel->stats->totalTicks
+                                << "]: Thread [" 
+                                << thread->getName() << ", " << thread->getID()
+                                << "] can preempt cur thrad. cur thread remaining time ["
+                                << t_key_cur
+                                << "], new ready thread pred time ["
+                                << thread->tsb->t_key
+                                << "]"
+                                
+                                );            
             kernel->interrupt->Preempt();
         }
     }
@@ -98,7 +106,6 @@ Scheduler::ReadyToRun(Thread *thread)
 Thread *
 Scheduler::FindNextToRun()
 {
-
 
     static int counter = 0;
     counter++;
@@ -132,8 +139,9 @@ Scheduler::Run (Thread *nextThread, bool finishing)
 {
     // previous running thread still has shorted estimated burst time.
     if(nextThread == kernel->currentThread){ 
-
+        ASSERT(kernel->interrupt->getLevel() == IntOff);
         nextThread->setStatus(RUNNING);
+        nextThread->CheckOverflow();	
 
     }
     else{

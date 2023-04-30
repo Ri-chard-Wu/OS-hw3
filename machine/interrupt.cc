@@ -180,7 +180,7 @@ Interrupt::OneTick()
     
     if(preempt){
         preempt = FALSE;
-        status = SystemMode;		// yield is a kernel routine
+        status = SystemMode;		
         kernel->currentThread->Yield();
         status = oldStatus;        
     }

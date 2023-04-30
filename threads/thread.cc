@@ -198,8 +198,6 @@ Thread::Yield() // preemption
     ASSERT(this == kernel->currentThread);
 
 
-
-
     // update tsb for running -> ready.
     double t_cur = (double)kernel->stats->totalTicks;
     ThreadSchedulingBlock *tsb = this->tsb;

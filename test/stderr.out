@@ -11,21 +11,16 @@
 [C] Tick [1304]: Thread [hw3t1, 1] update approximate burst time, from: [566], add [10], to [288]
 [A] Tick [1305]: Thread [hw3t1, 1] is inserted into queue
 [B] Tick [1305]: Thread [hw3t1, 1] is removed from queue
-
-// 1305 -> 1315: 10 unit times is due to trun on interrupt in P().
 [D] Tick [1305]: Thread [hw3t1, 1] is now selected for execution, thread [hw3t1, 1] starts IO, and it has executed [10] ticks
-Tick [1315]: CheckPreempt(), thread: hw3t2
-
-// 1315 -> 1325: 10 unit times is due to trun on interrupt in V() from lock release.
+[G] Tick [1315]: Thread [hw3t2, 2] can preempt cur thrad. cur thread remaining time [278], new ready thread pred time [66]
 [A] Tick [1315]: Thread [hw3t2, 2] is inserted into queue
 [A] Tick [1325]: Thread [hw3t1, 1] is inserted into queue
-
 [B] Tick [1325]: Thread [hw3t2, 2] is removed from queue
 [E] Tick [1325]: Thread [hw3t2, 2] is now selected for execution, thread [hw3t1, 1] is preempted, and it has executed [20] ticks
 [C] Tick [1335]: Thread [hw3t2, 2] update approximate burst time, from: [66], add [10], to [38]
 [B] Tick [1335]: Thread [hw3t1, 1] is removed from queue
 [D] Tick [1335]: Thread [hw3t1, 1] is now selected for execution, thread [hw3t2, 2] starts IO, and it has executed [10] ticks
-Tick [1345]: CheckPreempt(), thread: hw3t2
+[G] Tick [1345]: Thread [hw3t2, 2] can preempt cur thrad. cur thread remaining time [258], new ready thread pred time [38]
 [A] Tick [1345]: Thread [hw3t2, 2] is inserted into queue
 [A] Tick [1345]: Thread [hw3t1, 1] is inserted into queue
 [B] Tick [1345]: Thread [hw3t2, 2] is removed from queue
@@ -33,7 +28,7 @@ Tick [1345]: CheckPreempt(), thread: hw3t2
 [C] Tick [1355]: Thread [hw3t2, 2] update approximate burst time, from: [38], add [10], to [24]
 [B] Tick [1355]: Thread [hw3t1, 1] is removed from queue
 [D] Tick [1355]: Thread [hw3t1, 1] is now selected for execution, thread [hw3t2, 2] starts IO, and it has executed [10] ticks
-Tick [1365]: CheckPreempt(), thread: hw3t2
+[G] Tick [1365]: Thread [hw3t2, 2] can preempt cur thrad. cur thread remaining time [248], new ready thread pred time [24]
 [A] Tick [1365]: Thread [hw3t2, 2] is inserted into queue
 [A] Tick [1365]: Thread [hw3t1, 1] is inserted into queue
 [B] Tick [1365]: Thread [hw3t2, 2] is removed from queue
