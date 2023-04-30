@@ -1,40 +1,67 @@
 [A] Tick [10]: Thread [hw3t1, 1] is inserted into queue
 [A] Tick [20]: Thread [hw3t2, 2] is inserted into queue
-[B] Tick [30]: Thread [hw3t1, 1] is removed from queue
-[C] Tick [1162]: Thread [hw3t1, 1] update approximate burst time, from: [0], add [1132], to [566]
-[B] Tick [1162]: Thread [hw3t2, 2] is removed from queue
-[D] Tick [1162]: Thread [hw3t2, 2] is now selected for execution, thread [hw3t1, 1] starts IO, and it has executed [1132] ticks
-[A] Tick [1172]: Thread [hw3t1, 1] is inserted into queue
-[C] Tick [1294]: Thread [hw3t2, 2] update approximate burst time, from: [0], add [132], to [66]
-[B] Tick [1294]: Thread [hw3t1, 1] is removed from queue
-[D] Tick [1294]: Thread [hw3t1, 1] is now selected for execution, thread [hw3t2, 2] starts IO, and it has executed [132] ticks
-[C] Tick [1304]: Thread [hw3t1, 1] update approximate burst time, from: [566], add [10], to [288]
-[A] Tick [1305]: Thread [hw3t1, 1] is inserted into queue
-[B] Tick [1305]: Thread [hw3t1, 1] is removed from queue
-[D] Tick [1305]: Thread [hw3t1, 1] is now selected for execution, thread [hw3t1, 1] starts IO, and it has executed [10] ticks
-[G] Tick [1315]: Thread [hw3t2, 2] can preempt cur thrad. cur thread remaining time [278], new ready thread pred time [66]
-[A] Tick [1315]: Thread [hw3t2, 2] is inserted into queue
-[A] Tick [1325]: Thread [hw3t1, 1] is inserted into queue
-[B] Tick [1325]: Thread [hw3t2, 2] is removed from queue
-[E] Tick [1325]: Thread [hw3t2, 2] is now selected for execution, thread [hw3t1, 1] is preempted, and it has executed [20] ticks
-[C] Tick [1335]: Thread [hw3t2, 2] update approximate burst time, from: [66], add [10], to [38]
-[B] Tick [1335]: Thread [hw3t1, 1] is removed from queue
-[D] Tick [1335]: Thread [hw3t1, 1] is now selected for execution, thread [hw3t2, 2] starts IO, and it has executed [10] ticks
-[G] Tick [1345]: Thread [hw3t2, 2] can preempt cur thrad. cur thread remaining time [258], new ready thread pred time [38]
-[A] Tick [1345]: Thread [hw3t2, 2] is inserted into queue
-[A] Tick [1345]: Thread [hw3t1, 1] is inserted into queue
-[B] Tick [1345]: Thread [hw3t2, 2] is removed from queue
-[E] Tick [1345]: Thread [hw3t2, 2] is now selected for execution, thread [hw3t1, 1] is preempted, and it has executed [30] ticks
-[C] Tick [1355]: Thread [hw3t2, 2] update approximate burst time, from: [38], add [10], to [24]
-[B] Tick [1355]: Thread [hw3t1, 1] is removed from queue
-[D] Tick [1355]: Thread [hw3t1, 1] is now selected for execution, thread [hw3t2, 2] starts IO, and it has executed [10] ticks
-[G] Tick [1365]: Thread [hw3t2, 2] can preempt cur thrad. cur thread remaining time [248], new ready thread pred time [24]
-[A] Tick [1365]: Thread [hw3t2, 2] is inserted into queue
-[A] Tick [1365]: Thread [hw3t1, 1] is inserted into queue
-[B] Tick [1365]: Thread [hw3t2, 2] is removed from queue
-[E] Tick [1365]: Thread [hw3t2, 2] is now selected for execution, thread [hw3t1, 1] is preempted, and it has executed [40] ticks
-[F] Tick [111390]: return value: 2
-[B] Tick [111390]: Thread [hw3t1, 1] is removed from queue
-[F] Tick [331405]: return value: 1
+[A] Tick [30]: Thread [hw3t3, 3] is inserted into queue
+[B] Tick [40]: Thread [hw3t1, 1] is removed from queue
+[C] Tick [11072]: Thread [hw3t1, 1] update approximate burst time, from: [0], add [11032], to [5516]
+[B] Tick [11072]: Thread [hw3t2, 2] is removed from queue
+[D] Tick [11072]: Thread [hw3t2, 2] is now selected for execution, thread [hw3t1, 1] starts IO, and it has executed [11032] ticks
+[A] Tick [11082]: Thread [hw3t1, 1] is inserted into queue
+[C] Tick [12194]: Thread [hw3t2, 2] update approximate burst time, from: [0], add [1122], to [561]
+[B] Tick [12194]: Thread [hw3t3, 3] is removed from queue
+[D] Tick [12194]: Thread [hw3t3, 3] is now selected for execution, thread [hw3t2, 2] starts IO, and it has executed [1122] ticks
+[C] Tick [12271]: Thread [hw3t3, 3] update approximate burst time, from: [0], add [77], to [38.5]
+[B] Tick [12271]: Thread [hw3t1, 1] is removed from queue
+[D] Tick [12271]: Thread [hw3t1, 1] is now selected for execution, thread [hw3t3, 3] starts IO, and it has executed [77] ticks
+[C] Tick [12281]: Thread [hw3t1, 1] update approximate burst time, from: [5516], add [10], to [2763]
+[A] Tick [12282]: Thread [hw3t1, 1] is inserted into queue
+[B] Tick [12282]: Thread [hw3t1, 1] is removed from queue
+[D] Tick [12282]: Thread [hw3t1, 1] is now selected for execution, thread [hw3t1, 1] starts IO, and it has executed [10] ticks
+[G] Tick [12292]: Thread [hw3t2, 2] can preempt cur thrad. cur thread remaining time [2753], new ready thread pred time [561]
+[A] Tick [12292]: Thread [hw3t2, 2] is inserted into queue
+[A] Tick [12302]: Thread [hw3t1, 1] is inserted into queue
+[B] Tick [12302]: Thread [hw3t2, 2] is removed from queue
+[E] Tick [12302]: Thread [hw3t2, 2] is now selected for execution, thread [hw3t1, 1] is preempted, and it has executed [20] ticks
+[C] Tick [12312]: Thread [hw3t2, 2] update approximate burst time, from: [561], add [10], to [285.5]
+[B] Tick [12312]: Thread [hw3t1, 1] is removed from queue
+[D] Tick [12312]: Thread [hw3t1, 1] is now selected for execution, thread [hw3t2, 2] starts IO, and it has executed [10] ticks
+[G] Tick [12322]: Thread [hw3t2, 2] can preempt cur thrad. cur thread remaining time [2733], new ready thread pred time [285.5]
+[A] Tick [12322]: Thread [hw3t2, 2] is inserted into queue
+[A] Tick [12322]: Thread [hw3t1, 1] is inserted into queue
+[B] Tick [12322]: Thread [hw3t2, 2] is removed from queue
+[E] Tick [12322]: Thread [hw3t2, 2] is now selected for execution, thread [hw3t1, 1] is preempted, and it has executed [30] ticks
+[C] Tick [12332]: Thread [hw3t2, 2] update approximate burst time, from: [285.5], add [10], to [147.75]
+[B] Tick [12332]: Thread [hw3t1, 1] is removed from queue
+[D] Tick [12332]: Thread [hw3t1, 1] is now selected for execution, thread [hw3t2, 2] starts IO, and it has executed [10] ticks
+[G] Tick [12342]: Thread [hw3t2, 2] can preempt cur thrad. cur thread remaining time [2723], new ready thread pred time [147.75]
+[A] Tick [12342]: Thread [hw3t2, 2] is inserted into queue
+[A] Tick [12342]: Thread [hw3t1, 1] is inserted into queue
+[B] Tick [12342]: Thread [hw3t2, 2] is removed from queue
+[E] Tick [12342]: Thread [hw3t2, 2] is now selected for execution, thread [hw3t1, 1] is preempted, and it has executed [40] ticks
+[G] Tick [12352]: Thread [hw3t3, 3] can preempt cur thrad. cur thread remaining time [137.75], new ready thread pred time [38.5]
+[A] Tick [12352]: Thread [hw3t3, 3] is inserted into queue
+[A] Tick [12362]: Thread [hw3t2, 2] is inserted into queue
+[B] Tick [12362]: Thread [hw3t3, 3] is removed from queue
+[E] Tick [12362]: Thread [hw3t3, 3] is now selected for execution, thread [hw3t2, 2] is preempted, and it has executed [20] ticks
+[C] Tick [12372]: Thread [hw3t3, 3] update approximate burst time, from: [38.5], add [10], to [24.25]
+[B] Tick [12372]: Thread [hw3t2, 2] is removed from queue
+[D] Tick [12372]: Thread [hw3t2, 2] is now selected for execution, thread [hw3t3, 3] starts IO, and it has executed [10] ticks
+[G] Tick [12382]: Thread [hw3t3, 3] can preempt cur thrad. cur thread remaining time [117.75], new ready thread pred time [24.25]
+[A] Tick [12382]: Thread [hw3t3, 3] is inserted into queue
+[A] Tick [12382]: Thread [hw3t2, 2] is inserted into queue
+[B] Tick [12382]: Thread [hw3t3, 3] is removed from queue
+[E] Tick [12382]: Thread [hw3t3, 3] is now selected for execution, thread [hw3t2, 2] is preempted, and it has executed [30] ticks
+[C] Tick [12392]: Thread [hw3t3, 3] update approximate burst time, from: [24.25], add [10], to [17.125]
+[B] Tick [12392]: Thread [hw3t2, 2] is removed from queue
+[D] Tick [12392]: Thread [hw3t2, 2] is now selected for execution, thread [hw3t3, 3] starts IO, and it has executed [10] ticks
+[G] Tick [12402]: Thread [hw3t3, 3] can preempt cur thrad. cur thread remaining time [107.75], new ready thread pred time [17.125]
+[A] Tick [12402]: Thread [hw3t3, 3] is inserted into queue
+[A] Tick [12402]: Thread [hw3t2, 2] is inserted into queue
+[B] Tick [12402]: Thread [hw3t3, 3] is removed from queue
+[E] Tick [12402]: Thread [hw3t3, 3] is now selected for execution, thread [hw3t2, 2] is preempted, and it has executed [40] ticks
+[F] Tick [122427]: return value: 3
+[B] Tick [122427]: Thread [hw3t2, 2] is removed from queue
+[F] Tick [232442]: return value: 2
+[B] Tick [232442]: Thread [hw3t1, 1] is removed from queue
+[F] Tick [452457]: return value: 1
 
 Cleaning up after signal 2
