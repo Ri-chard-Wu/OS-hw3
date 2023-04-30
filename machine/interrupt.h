@@ -104,9 +104,8 @@ class Interrupt {
     int ReadFile(char *buffer, int size, OpenFileId id);
     int CloseFile(OpenFileId id);
  
-    void YieldOnReturn();	
-    void Preempt();	
-    
+    void YieldOnReturn();	// cause a context switch on return 
+				// from an interrupt handler
 
     MachineStatus getStatus() { return status; } 
     void setStatus(MachineStatus st) { status = st; }
@@ -137,7 +136,6 @@ class Interrupt {
     //bool putBusy;               // Is a PrintInt operation in progress
                                   //If so, you cannoot do another one
     bool yieldOnReturn; 	// TRUE if we are to context switch
-    bool preempt;
 				// on return from the interrupt handler
     MachineStatus status;	// idle, kernel mode, user mode
 

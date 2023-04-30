@@ -81,14 +81,14 @@ struct ThreadSchedulingBlock{
   double t_start;
   double T;
   
-  static int Compare(ThreadSchedulingBlock *tsb1, ThreadSchedulingBlock *tsb2){
+  static int Compare(ThreadSchedulingBlock *tsb1, 
+                          ThreadSchedulingBlock *tsb2){
       if(tsb1->t_key < tsb2->t_key) return -1;
       else if(tsb1->t_key == tsb2->t_key) return 0;
       else if(tsb1->t_key > tsb2->t_key) return 1; 
   }
 
   void print(){
-      // cout << "\nthread name: " << thread->getName() << "\n";
       cout << "\nt_pred: " << t_pred << "\n";
       cout << "t_key: " << t_key << "\n";
       cout << "t_start: " << t_start << "\n";

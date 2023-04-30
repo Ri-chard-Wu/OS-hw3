@@ -34,6 +34,7 @@ Scheduler::Scheduler()
     readyList = new SortedList<ThreadSchedulingBlock *>\
                 (ThreadSchedulingBlock::Compare); 
     toBeDestroyed = NULL;
+    preempt = FALSE;
 } 
 
 //----------------------------------------------------------------------
@@ -52,14 +53,10 @@ Scheduler::~Scheduler()
 
 void Scheduler::CheckPreempt(Thread *thread){
 
-
-    
     MachineStatus status = kernel->interrupt->getStatus();
-    // if status == IdelMode: no thread is running right now -> no need to preempt.    
-    if (status != IdleMode) { 
-        
 
-                                    
+    if (status != IdleMode) { 
+                              
         double t_cur = (double)kernel->stats->totalTicks;
         double T_cur = t_cur - kernel->currentThread->tsb->t_start + \
                                         kernel->currentThread->tsb->T;
@@ -67,18 +64,27 @@ void Scheduler::CheckPreempt(Thread *thread){
 
         if(thread->tsb->t_key < t_key_cur){
             DEBUG('z', "[G] Tick [" <<  kernel->stats->totalTicks
-                                << "]: Thread [" 
-                                << thread->getName() << ", " << thread->getID()
-                                << "] can preempt cur thrad. cur thread remaining time ["
-                                << t_key_cur
-                                << "], new ready thread pred time ["
-                                << thread->tsb->t_key
-                                << "]"
-                                
-                                );            
-            kernel->interrupt->Preempt();
+            << "]: Thread [" 
+            << thread->getName() << ", " << thread->getID()
+            << "] can preempt cur thrad. cur thread remaining time ["
+            << t_key_cur
+            << "], new ready thread pred time ["
+            << thread->tsb->t_key
+            << "]"
+            
+            );   
+
+            Preempt();
+
         }
     }
+}
+
+
+void
+Scheduler::Preempt()
+{ 
+    preempt = TRUE; 
 }
 
 
@@ -106,28 +112,21 @@ Scheduler::ReadyToRun(Thread *thread)
 Thread *
 Scheduler::FindNextToRun()
 {
-
     static int counter = 0;
     counter++;
-
     ASSERT(kernel->interrupt->getLevel() == IntOff);
-
     if (readyList->IsEmpty()) {
-        // cout << counter << ": nextThread: NULL\n";
 		return NULL;
     } else {
 
         Thread *nextThread =  readyList->RemoveFront()->thread;
         nextThread->tsb->t_start = (double)kernel->stats->totalTicks;
 
-
         DEBUG('z', "[B] Tick [" <<  kernel->stats->totalTicks
-                                << "]: Thread [" 
-                                << nextThread->getName() << ", " << nextThread->getID()
-                                << "] is removed from queue");
+                  << "]: Thread [" 
+                  << nextThread->getName() << ", " << nextThread->getID()
+                  << "] is removed from queue");
                                 
-        // cout << counter << ": nextThread: " << nextThread->getName() << "\n";
-
     	return nextThread;
     }
 }

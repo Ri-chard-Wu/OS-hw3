@@ -34,10 +34,15 @@ class Scheduler {
     				// running needs to be deleted
     void Print();		// Print contents of ready list
     void CheckPreempt(Thread *thread);
+    void Preempt();
     
     // SelfTest for scheduler is implemented in class Thread
+
+    bool preempt;
     
   private:
+    
+  
     SortedList<ThreadSchedulingBlock *> *readyList;  // queue of threads that are ready to run,
 				// but not running
     Thread *toBeDestroyed;	// finishing thread to be destroyed

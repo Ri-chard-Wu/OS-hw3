@@ -190,44 +190,38 @@ Thread::Finish ()
 // }
 
 
+
 void
 Thread::Yield() // preemption
 {
+    if(!kernel->scheduler->preempt) return;
+
+    kernel->scheduler->preempt = FALSE;
+
     
     IntStatus oldLevel = kernel->interrupt->SetLevel(IntOff);
     ASSERT(this == kernel->currentThread);
-
-
-    // update tsb for running -> ready.
     double t_cur = (double)kernel->stats->totalTicks;
     ThreadSchedulingBlock *tsb = this->tsb;
     tsb->T += t_cur - tsb->t_start;
 
     tsb->t_key = tsb->t_pred - tsb->T;
-    if(tsb->t_key < 0){
-        tsb->t_key = 0;
-    }
+    if(tsb->t_key < 0){ tsb->t_key = 0;}
 
-    
     kernel->scheduler->ReadyToRun(this);
-
     Thread *nextThread = kernel->scheduler->FindNextToRun();
 
-
     DEBUG('z', "[E] Tick [" <<  kernel->stats->totalTicks
-                            << "]: Thread [" 
-                            << nextThread->getName() << ", " << nextThread->getID()
-                            << "] is now selected for execution, thread ["
-                            << this->getName() << ", " << this->getID()
-                            << "] is preempted, and it has executed ["
-                            << tsb->T
-                            << "] ticks"
-                            );
+       << "]: Thread [" 
+       << nextThread->getName() << ", " << nextThread->getID()
+       << "] is now selected for execution, thread ["
+       << this->getName() << ", " << this->getID()
+       << "] is preempted, and it has executed ["
+       << tsb->T
+       << "] ticks"
+       );
 
-
-    // `nextThread` can be the same as `kernel->currentThread`.
     kernel->scheduler->Run(nextThread, FALSE);
-
     (void) kernel->interrupt->SetLevel(oldLevel);
 }
 
@@ -249,31 +243,22 @@ Thread::Yield() // preemption
 //     kernel->scheduler-> Run(nextThread, finishing); 
 // }
 
-
 void
 Thread::Sleep(bool finishing)
 {
     ASSERT(this == kernel->currentThread);
     ASSERT(kernel->interrupt->getLevel() == IntOff);
-
     double t_accu;
     double t_pred_prev;
-
     if(!finishing){
-
         double t_cur = (double)kernel->stats->totalTicks;
         ThreadSchedulingBlock *tsb = this->tsb;
-
         tsb->T += t_cur - tsb->t_start;
-
         t_accu = tsb->T;
         t_pred_prev = tsb->t_pred;
-
         tsb->t_pred = 0.5 * tsb->T + 0.5 * tsb->t_pred;
         tsb->t_key = tsb->t_pred;
         tsb->T = 0;
-
-
         DEBUG('z', "[C] Tick [" <<  kernel->stats->totalTicks
                                 << "]: Thread [" 
                                 << this->getName() << ", " << this->getID()
@@ -285,18 +270,12 @@ Thread::Sleep(bool finishing)
                                 << tsb->t_pred
                                 << "]"
                                 );
-
-
     }
-
-
     Thread *nextThread;
     status = BLOCKED;
     while ((nextThread = kernel->scheduler->FindNextToRun()) == NULL) {
 		kernel->interrupt->Idle();	
 	}    
-    
-
     if(!finishing){
         DEBUG('z', "[D] Tick [" <<  kernel->stats->totalTicks
                                 << "]: Thread [" 
@@ -308,7 +287,6 @@ Thread::Sleep(bool finishing)
                                 << "] ticks"
                                 );
     }
-
     kernel->scheduler->Run(nextThread, finishing); 
 }
 
