@@ -52,14 +52,22 @@ Scheduler::~Scheduler()
 
 void Scheduler::CheckPreempt(Thread *thread){
 
+
+    
     MachineStatus status = kernel->interrupt->getStatus();
     // if status == IdelMode: no thread is running right now -> no need to preempt.    
     if (status != IdleMode) { 
         
+
+                                    
         double t_cur = (double)kernel->stats->totalTicks;
-        double t_key_cur = t_cur - kernel->currentThread->tsb->t_start;
+        double T_cur = t_cur - kernel->currentThread->tsb->t_start + \
+                                        kernel->currentThread->tsb->T;
+        double t_key_cur = kernel->currentThread->tsb->t_pred - T_cur;
 
         if(thread->tsb->t_key < t_key_cur){
+            DEBUG('z', "Tick [" <<  kernel->stats->totalTicks
+                                << "]: CheckPreempt(), thread: " << thread->getName());            
             kernel->interrupt->Preempt();
         }
     }

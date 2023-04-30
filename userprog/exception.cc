@@ -130,6 +130,10 @@ ExceptionHandler(ExceptionType which)
 			DEBUG(dbgAddr, "Program exit\n");
             		val=kernel->machine->ReadRegister(4);
             		cout << "return value:" << val << endl;
+					DEBUG('z', "[F] Tick [" <<  kernel->stats->totalTicks
+                            << "]: return value: " 
+							<< val
+							);
 			kernel->currentThread->Finish();
             break;
 // *************** MP1 *************** //

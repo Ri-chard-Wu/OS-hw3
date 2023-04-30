@@ -111,19 +111,14 @@ SynchConsoleOutput::PutInt(int value)
 {
     char str[15];
     int idx=0;
-    //sprintf(str, "%d\n\0", value);  the true one
     sprintf(str, "%d\n\0", value); //simply for trace code
     lock->Acquire();
     do{
-	DEBUG(dbgTraCode, "In SynchConsoleOutput::PutChar, into consoleOutput->PutChar, " << kernel->stats->totalTicks);
         consoleOutput->PutChar(str[idx]);
-	DEBUG(dbgTraCode, "In SynchConsoleOutput::PutChar, return from consoleOutput->PutChar, " << kernel->stats->totalTicks);
-	idx++;
-		
-	DEBUG(dbgTraCode, "In SynchConsoleOutput::PutChar, into waitFor->P(), " << kernel->stats->totalTicks);
+	    idx++;
         waitFor->P();
-	DEBUG(dbgTraCode, "In SynchConsoleOutput::PutChar, return form  waitFor->P(), " << kernel->stats->totalTicks);
     } while (str[idx] != '\0');
+
     lock->Release();
 }
 
